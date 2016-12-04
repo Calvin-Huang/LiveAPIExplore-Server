@@ -7,8 +7,10 @@ cache:
     - node_modules
 install:
   # - yarn global add sequelize-cli
-  - npm install sequelize-cli
+  - npm install sequelize-cli -g
+  - npm install
 before_script:
+  - touch database.sqlite
   - sequelize db:migrate
   - sequelize db:seed --seed 20161204173948-default-admin
 script:
