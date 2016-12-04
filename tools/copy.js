@@ -27,7 +27,7 @@ async function copy() {
         start: 'node server.js',
       },
     }, null, 2)),
-    copyFile('LICENSE.txt', 'build/LICENSE.txt'),
+    copyFile('LICENSE', 'build/LICENSE'),
     copyDir('src/content', 'build/content'),
     copyDir('src/public', 'build/public'),
   ]);
