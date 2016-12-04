@@ -1,0 +1,11 @@
+language: node_js
+node_js:
+  - "node"
+before_install:
+  - yarn global add sequelize-cli
+install:
+  - yarn install
+  - sequelize db:migrate
+  - sequelize db:seed --seed 20161204173948-default-admin
+script:
+  - yarn test
