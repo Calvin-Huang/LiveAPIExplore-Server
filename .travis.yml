@@ -12,7 +12,7 @@ install:
 before_script:
   - touch database.sqlite
   - sequelize db:migrate
-  - sequelize db:seed --seed 20161204173948-default-admin
+  - SEED_ADMIN_USERNAME=$SEED_ADMIN_USERNAME SEED_ADMIN_PASSWORD=$SEED_ADMIN_PASSWORD sequelize db:seed --seed 20161204173948-default-admin
 script:
   # - yarn test
   - npm test
