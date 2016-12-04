@@ -6,10 +6,11 @@ cache:
   directories:
     - node_modules
 install:
-  - yarn global add sequelize-cli
-  # - npm install sequelize-cli -g
+  # - yarn global add sequelize-cli
+  - npm install sequelize-cli
+before_script:
   - sequelize db:migrate
   - sequelize db:seed --seed 20161204173948-default-admin
 script:
-  - yarn test
-  # - npm test
+  # - yarn test
+  - npm test
