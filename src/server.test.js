@@ -21,4 +21,10 @@ describe('server', () => {
 
     expect(response.status).to.eq(401);
   });
+
+  it('should allow visit to page login', async () => {
+    const response = await fetch('http://localhost:3000/login');
+
+    expect(response.status).to.eq(200);
+  });
 });
