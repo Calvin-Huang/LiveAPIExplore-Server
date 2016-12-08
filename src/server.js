@@ -57,11 +57,40 @@ app.use(bodyParser.json());
 //
 // Authentication
 // -----------------------------------------------------------------------------
-app.use(expressJwt({
-  secret: auth.jwt.secret,
-  credentialsRequired: false,
-  getToken: req => req.cookies.id_token,
-}));
+app.use(
+  expressJwt({
+    secret: auth.jwt.secret,
+    credentialsRequired: false,
+    getToken: function fromHeaderOrQuertstring(req) {
+      if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
+        return req.headers.authorization.split(' ')[1];
+      } else if (req.query && req.query.token) {
+        return req.query.token;
+      }
+
+      return null;
+    },
+  }).unless({ path: ['/login'] }),
+  (req, res, next) => {
+    const allowedPaths = ['/login', '/graphql'];
+    if (allowedPaths.indexOf(req.path) > -1) {
+      return next();
+    }
+
+    if (!req.user) {
+      return res.sendStatus(401);
+    }
+
+    const adminAllowedPaths = ['/', '/users', '/admins'];
+    if (adminAllowedPaths.indexOf(req.path) > -1) {
+      if (!req.user.admin) {
+        return res.sendStatus(401);
+      }
+    }
+
+    return next();
+  },
+);
 app.use(passport.initialize());
 
 app.get('/auth/facebook',
