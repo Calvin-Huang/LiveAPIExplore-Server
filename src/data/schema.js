@@ -21,6 +21,7 @@ import admin from './queries/admin';
 import login from './mutations/login';
 import addAdmin from './mutations/addAdmin';
 import deleteAdmin from './mutations/deleteAdmin';
+import registerOrLogin from './mutations/registerOrLogin';
 
 const schema = new Schema({
   query: new ObjectType({
@@ -38,7 +39,8 @@ const schema = new Schema({
     fields: {
       login,
       addAdmin,
-      deleteAdmin
+      deleteAdmin,
+      registerOrLogin,
     }
   })
 });
