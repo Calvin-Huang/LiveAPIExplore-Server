@@ -5,8 +5,12 @@ import Admin from '../models/Admin';
 
 const admin = {
   type: new GraphQLList(AdminType),
-  resolve() {
-    return Admin.findAll();
+  resolve(fieldName, args, context, { rootValue: { request } }) {
+    if (request.user && request.user.admin) {
+      return Admin.findAll();
+    } else {
+      return new Promise((resolve) => { resolve([]); });
+    }
   }
 }
 
