@@ -10,6 +10,7 @@
 import 'babel-polyfill';
 import path from 'path';
 import express from 'express';
+import xhub from 'express-x-hub';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import expressJwt from 'express-jwt';
@@ -51,6 +52,7 @@ global.navigator.userAgent = global.navigator.userAgent || 'all';
 // -----------------------------------------------------------------------------
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
+app.use(xhub({ algorithm: 'sha1', secret: process.env.APP_SECRET }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -105,6 +107,28 @@ app.get('/auth/facebook/callback',
     res.cookie('id_token', token, { maxAge: 1000 * expiresIn, httpOnly: true });
     res.redirect('/');
   },
+);
+// Verify with FB console.
+app.get('/fb-subscribe', (req, res, next) => {
+  if (req.param('hub.mode') == 'subscribe' && req.param('hub.verify_token') == process.env.VERIFY_TOKEN) {
+    res.send(req.param('hub.challenge'));
+  } else {
+    res.sendStatus(400);
+  }
+});
+// Subscriber for receiving FB notification.
+app.post('/fb-subscribe',
+  // Middleware for authorization.
+  (req, res, next) => {
+    if (req.isXHub && req.isXHubValid()) {
+      return next();
+    } else {
+      res.sendStatus(401);
+    }
+  },
+  (req, res) => {
+
+  }
 );
 
 //
