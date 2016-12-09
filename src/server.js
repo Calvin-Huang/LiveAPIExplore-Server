@@ -70,9 +70,9 @@ app.use(
 
       return null;
     },
-  }).unless({ path: ['/login'] }),
+  }),
   (req, res, next) => {
-    const allowedPaths = ['/login', '/graphql'];
+    const allowedPaths = ['/login', '/graphql', '/auth/facebook', '/auth/facebook/callback'];
 
     if (allowedPaths.indexOf(req.path) > -1) {
       return next();
