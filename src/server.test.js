@@ -1,12 +1,10 @@
 import fetch from 'node-fetch';
 import { expect } from 'chai';
 
-import { Admin, User } from './data/models';
+import { Admin, User, UserClaim, UserProfile } from './data/models';
 import passwordHash from 'password-hash';
 
 import runServer from '../tools/runServer';
-
-import util from 'util';
 
 describe('server', () => {
   context('will protect resources', () => {
@@ -25,7 +23,14 @@ describe('server', () => {
       serve.kill('SIGTERM');
 
       Admin.destroy({ where: { username: 'calvin.admin@capslock.tw' } });
-      User.destroy({ where: { email: 'calvin.user@capslock.tw' } });
+      User.destroy({
+        where: { email: 'calvin.user@capslock.tw' }
+      }, {
+        include: [
+          { model: UserClaim, as: 'claims' },
+          { model: UserProfile, as: 'profile' },
+        ]
+      });
     });
 
     it('should prevent response context without authorization', async () => {
@@ -57,7 +62,7 @@ describe('server', () => {
       const variables = {
         username: 'calvin.admin@capslock.tw',
         password: '12364362',
-      }
+      };
 
       const login = await fetch('http://localhost:3000/graphql', {
         method: 'POST',

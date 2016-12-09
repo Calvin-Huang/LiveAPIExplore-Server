@@ -73,6 +73,7 @@ app.use(
   }).unless({ path: ['/login'] }),
   (req, res, next) => {
     const allowedPaths = ['/login', '/graphql'];
+
     if (allowedPaths.indexOf(req.path) > -1) {
       return next();
     }
