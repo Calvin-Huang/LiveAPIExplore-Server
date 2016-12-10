@@ -5,8 +5,6 @@ import Admin from '../models/admin';
 
 import passwordHash from 'password-hash';
 
-import util from 'util';
-
 const addAdmin = {
   type: new GraphQLObjectType({
     name: 'AddAdmin',
