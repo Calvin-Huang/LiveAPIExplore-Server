@@ -8,6 +8,7 @@
  */
 
 import 'babel-polyfill';
+import http from 'http';
 import path from 'path';
 import express from 'express';
 import cookieParser from 'cookie-parser';
@@ -36,6 +37,8 @@ import schema from './data/schema';
 import routes from './routes';
 import reducers from './reducers';
 import { port, auth } from './config';
+
+import io from './socket';
 
 const app = express();
 
@@ -189,8 +192,11 @@ app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
 // Launch the server
 // -----------------------------------------------------------------------------
 /* eslint-disable no-console */
+const server = http.createServer(app);
+io.attach(server);
+
 models.sync().catch(err => console.error(err.stack)).then(() => {
-  app.listen(port, () => {
+  server.listen(port, () => {
     console.log(`The server is running at http://localhost:${port}/`);
   });
 });
