@@ -14,6 +14,7 @@ describe('socket', () => {
 
   after(() => {
     redis.lrem('live:1:comments', -1, commentMessage);
+    redis.quit();
   });
 
   it('should receive message from subscribed live room', (done) => {

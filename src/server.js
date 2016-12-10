@@ -11,11 +11,13 @@ import 'babel-polyfill';
 import http from 'http';
 import path from 'path';
 import express from 'express';
+import xhub from 'express-x-hub';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import expressJwt from 'express-jwt';
 import expressGraphQL from 'express-graphql';
 import jwt from 'jsonwebtoken';
+import { createClient } from 'redis';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
 import { Provider } from 'react-redux';
@@ -36,7 +38,7 @@ import models from './data/models';
 import schema from './data/schema';
 import routes from './routes';
 import reducers from './reducers';
-import { port, auth } from './config';
+import { port, auth, redisUrl } from './config';
 
 import io from './socket';
 
@@ -54,6 +56,7 @@ global.navigator.userAgent = global.navigator.userAgent || 'all';
 // -----------------------------------------------------------------------------
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
+app.use(xhub({ algorithm: 'sha1', secret: process.env.APP_SECRET }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -108,6 +111,55 @@ app.get('/auth/facebook/callback',
     res.cookie('id_token', token, { maxAge: 1000 * expiresIn, httpOnly: true });
     res.redirect('/');
   },
+);
+// Verify with FB console.
+app.get('/fb-subscribe', (req, res, next) => {
+  if (req.param('hub.mode') == 'subscribe' && req.param('hub.verify_token') == process.env.VERIFY_TOKEN) {
+    res.send(req.param('hub.challenge'));
+  } else {
+    res.sendStatus(400);
+  }
+});
+// Subscriber for receiving FB notification.
+app.post('/fb-subscribe',
+  // Middleware for authorization.
+  (req, res, next) => {
+    if (req.isXHub && req.isXHubValid()) {
+      return next();
+    } else {
+      res.sendStatus(401);
+    }
+  },
+  (req, res) => {
+    const { entry, object } = req;
+
+    if (object === 'page') {
+      entry.forEach((eachEntry) => {
+        const { changes } = eachEntry;
+
+        changes.forEach((change) => {
+          const { field, value: { sender_name, sender_id, item, post_id, verb, message } } = change;
+
+          // Handle feed
+          if (field === 'feed') {
+
+            // Add new comment into redis and broadcast to subscribers.
+            if (item === 'comment' && verb === 'add') {
+              const videoId = post_id.split('_')[1];
+              const redis = createClient(redisUrl);
+
+              redis.rpush(`live:${videoId}:comments`, message);
+              redis.publish(`live:${videoId}:comments:latest`, message);
+
+              redis.quit();
+            }
+          }
+        });
+      });
+    }
+
+    res.send('OK');
+  }
 );
 
 //

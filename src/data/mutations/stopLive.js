@@ -21,6 +21,7 @@ const stopLive = {
         } else {
           reject(err);
         }
+        redis.quit();
       });
     });
   }
