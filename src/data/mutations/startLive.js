@@ -1,6 +1,8 @@
 import { GraphQLBoolean, GraphQLString } from 'graphql';
 import { createClient } from 'redis';
 
+import { redisUrl } from '../../config';
+
 const startLive = {
   type: GraphQLBoolean,
   args: {
@@ -12,7 +14,7 @@ const startLive = {
         resolve(false);
       }
 
-      const redis = createClient();
+      const redis = createClient(redisUrl);
       redis.rpush('live', id, (err, reply) => {
         if (!err) {
           resolve(true);

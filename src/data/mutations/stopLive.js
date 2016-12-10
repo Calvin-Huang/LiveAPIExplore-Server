@@ -1,6 +1,8 @@
 import { GraphQLBoolean, GraphQLString } from 'graphql';
 import { createClient } from 'redis';
 
+import { redisUrl } from '../../config';
+
 const stopLive = {
   type: GraphQLBoolean,
   args: {
@@ -12,7 +14,7 @@ const stopLive = {
         resolve(false);
       }
 
-      const redis = createClient();
+      const redis = createClient(redisUrl);
       redis.lrem('live', id, -1, (err, reply) => {
         if (!err) {
           resolve(true);

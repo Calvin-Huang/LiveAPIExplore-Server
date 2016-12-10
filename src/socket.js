@@ -1,6 +1,8 @@
 import SocketIO from 'socket.io';
 import { createClient } from 'redis';
 
+import { redisUrl } from './config';
+
 const io = SocketIO();
 
 io.use((socket, next) => {
@@ -12,7 +14,7 @@ io.of('/live-chatroom')
     return next();
   })
   .on('connection', (socket) => {
-    const redis = createClient();
+    const redis = createClient(redisUrl);
 
     socket.on('subscribe', (id) => {
       socket.join(`live:${id}:comments`);
