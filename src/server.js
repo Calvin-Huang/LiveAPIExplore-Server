@@ -17,6 +17,7 @@ import bodyParser from 'body-parser';
 import expressJwt from 'express-jwt';
 import expressGraphQL from 'express-graphql';
 import jwt from 'jsonwebtoken';
+import { createClient } from 'redis';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
 import { Provider } from 'react-redux';
@@ -37,7 +38,7 @@ import models from './data/models';
 import schema from './data/schema';
 import routes from './routes';
 import reducers from './reducers';
-import { port, auth } from './config';
+import { port, auth, redisUrl } from './config';
 
 import io from './socket';
 
@@ -130,7 +131,34 @@ app.post('/fb-subscribe',
     }
   },
   (req, res) => {
+    const { entry, object } = req;
 
+    if (object === 'page') {
+      entry.forEach((eachEntry) => {
+        const { changes } = eachEntry;
+
+        changes.forEach((change) => {
+          const { field, value: { sender_name, sender_id, item, post_id, verb, message } } = change;
+
+          // Handle feed
+          if (field === 'feed') {
+
+            // Add new comment into redis and broadcast to subscribers.
+            if (item === 'comment' && verb === 'add') {
+              const videoId = post_id.split('_')[1];
+              const redis = createClient(redisUrl);
+
+              redis.rpush(`live:${videoId}:comments`, message);
+              redis.publish(`live:${videoId}:comments:latest`, message);
+
+              redis.quit();
+            }
+          }
+        });
+      });
+    }
+
+    res.send('OK');
   }
 );
 
