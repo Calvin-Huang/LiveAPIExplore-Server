@@ -13,6 +13,7 @@ const live = {
         } else {
           reject(err);
         }
+        redis.quit();
       });
     });
   }
