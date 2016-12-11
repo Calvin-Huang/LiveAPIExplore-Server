@@ -1,6 +1,6 @@
 import { GraphQLInt, GraphQLNonNull, GraphQLBoolean } from 'graphql';
 
-import Admin from '../models/admin';
+import { Admin } from '../models';
 
 const deleteAdmin = {
   type: GraphQLBoolean,
@@ -8,7 +8,11 @@ const deleteAdmin = {
     id: { type: new GraphQLNonNull(GraphQLInt) },
   },
 
-  async resolve(obj, {id}) {
+  async resolve(obj, {id}, context, { rootValue: { request } }) {
+    if (!request.user) {
+      return false;
+    }
+
     const affectedRows = Admin.destroy({ where: { id: id } });
 
     return (affectedRows <= 0 ? false : true);

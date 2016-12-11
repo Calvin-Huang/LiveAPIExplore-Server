@@ -8,6 +8,10 @@ const UserProfile = Model.define('UserProfile', {
     primaryKey: true,
   },
 
+  phone: {
+    type: DataType.STRING,
+  },
+
   displayName: {
     type: DataType.STRING(100),
   },

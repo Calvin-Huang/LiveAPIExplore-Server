@@ -34,7 +34,7 @@ const login = {
       result.authenticated = true;
 
       const expiresIn = 60 * 60 * 24 * 180; // 180 days
-      const token = jwt.sign({ id: user.id, username: username }, auth.jwt.secret, { expiresIn });
+      const token = jwt.sign({ ...user.toJSON(), admin: true }, auth.jwt.secret, { expiresIn });
 
       result.jwtToken = token;
     }

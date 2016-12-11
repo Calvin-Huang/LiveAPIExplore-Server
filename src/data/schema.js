@@ -17,10 +17,14 @@ import content from './queries/content';
 import news from './queries/news';
 import fbAuth from './queries/fbAuth';
 import admin from './queries/admin';
+import live from './queries/live';
 
 import login from './mutations/login';
 import addAdmin from './mutations/addAdmin';
 import deleteAdmin from './mutations/deleteAdmin';
+import registerOrLogin from './mutations/registerOrLogin';
+import startLive from './mutations/startLive';
+import stopLive from './mutations/stopLive';
 
 const schema = new Schema({
   query: new ObjectType({
@@ -31,6 +35,7 @@ const schema = new Schema({
       news,
       fbAuth,
       admin,
+      live,
     },
   }),
   mutation: new ObjectType({
@@ -38,7 +43,10 @@ const schema = new Schema({
     fields: {
       login,
       addAdmin,
-      deleteAdmin
+      deleteAdmin,
+      registerOrLogin,
+      startLive,
+      stopLive,
     }
   })
 });

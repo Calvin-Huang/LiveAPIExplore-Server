@@ -1,6 +1,8 @@
 language: node_js
 node_js:
   - "node"
+services:
+  - redis-server
 cache:
   yarn: true
   directories:
@@ -15,4 +17,5 @@ before_script:
   - SEED_ADMIN_USERNAME=$SEED_ADMIN_USERNAME SEED_ADMIN_PASSWORD=$SEED_ADMIN_PASSWORD sequelize db:seed --seed 20161204173948-default-admin
 script:
   # - yarn test
+  - npm run build
   - npm test

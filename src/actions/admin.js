@@ -11,6 +11,7 @@ export function fetchAdmins() {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
         },
         body: JSON.stringify({
           query: '{admin{id,username}}',
@@ -39,6 +40,7 @@ export function addAdmin(username, password) {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
         },
         body: JSON.stringify({
           query: `mutation{addAdmin(username:"${username}",password:"${password}"){status,message,admin{id,username}}}`
@@ -67,6 +69,7 @@ export function deleteAdmin(id) {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
         },
         body: JSON.stringify({
           query: `mutation{deleteAdmin(id:${id})}`

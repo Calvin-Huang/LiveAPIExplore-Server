@@ -1,11 +1,9 @@
 import { GraphQLString, GraphQLBoolean, GraphQLObjectType } from 'graphql';
 import AdminType from '../types/AdminType';
 
-import Admin from '../models/admin';
+import { Admin } from '../models';
 
 import passwordHash from 'password-hash';
-
-import util from 'util';
 
 const addAdmin = {
   type: new GraphQLObjectType({
@@ -21,12 +19,16 @@ const addAdmin = {
     password: { type: GraphQLString },
   },
 
-  async resolve(obj, {username, password}) {
+  async resolve(obj, {username, password}, context, { rootValue: { request } }) {
     let response = {
       status: false,
       message: '',
       admin: null,
     };
+
+    if (!request.user) {
+      response.message = 'Unauthorized';
+    }
 
     if (!username || !password) {
       response.message = 'Username or Password can not be null.';
