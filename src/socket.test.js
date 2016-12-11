@@ -3,10 +3,12 @@ import { createClient } from 'redis';
 import io from 'socket.io-client';
 
 import server from './socket';
+import { redisUrl } from './config';
 
 describe('socket', () => {
   const commentMessage = 'Received comment!!';
-  const redis = createClient();
+
+  const redis = createClient(redisUrl);
 
   before(async () => {
     server.listen(5000);
