@@ -78,7 +78,7 @@ app.use(
     },
   }),
   (req, res, next) => {
-    const allowedPaths = ['/login', '/graphql', '/auth/facebook', '/auth/facebook/callback'];
+    const allowedPaths = ['/login', '/graphql', '/auth/facebook', '/auth/facebook/callback', '/fb-subscribe'];
 
     if (allowedPaths.indexOf(req.path) > -1) {
       return next();
