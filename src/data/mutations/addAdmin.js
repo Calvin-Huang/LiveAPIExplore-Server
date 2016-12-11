@@ -1,7 +1,7 @@
 import { GraphQLString, GraphQLBoolean, GraphQLObjectType } from 'graphql';
 import AdminType from '../types/AdminType';
 
-import Admin from '../models/admin';
+import { Admin } from '../models';
 
 import passwordHash from 'password-hash';
 

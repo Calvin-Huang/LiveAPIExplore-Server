@@ -1,6 +1,6 @@
 import { GraphQLInt, GraphQLNonNull, GraphQLBoolean } from 'graphql';
 
-import Admin from '../models/admin';
+import { Admin } from '../models';
 
 const deleteAdmin = {
   type: GraphQLBoolean,
