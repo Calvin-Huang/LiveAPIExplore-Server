@@ -118,29 +118,6 @@
     "webpack-hot-middleware": "^2.13.2",
     "webpack-middleware": "^1.5.1"
   },
-  "babel": {
-    "presets": [
-      "react",
-      "stage-0"
-    ],
-    "plugins": [
-      "syntax-trailing-function-commas",
-      "transform-async-to-generator",
-      "transform-es2015-destructuring",
-      "transform-es2015-parameters",
-      "transform-es2015-duplicate-keys",
-      "transform-es2015-modules-commonjs",
-      "transform-exponentiation-operator",
-      "transform-runtime"
-    ],
-    "env": {
-      "test": {
-        "plugins": [
-          "rewire"
-        ]
-      }
-    }
-  },
   "eslintConfig": {
     "parser": "babel-eslint",
     "extends": "airbnb",
