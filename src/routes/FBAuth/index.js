@@ -4,12 +4,10 @@ import { connect } from 'react-redux';
 import Content from '../../components/Content';
 import { fetchFBAuth } from '../../actions/fbAuth';
 
-import util from 'util';
+import 'whatwg-fetch';
 
 function mapStateToProps(state) {
-  return {
-    fbAuth: state.fbAuth
-  };
+  return state.fbAuth;
 }
 
 class FBAuth extends React.Component {
@@ -18,23 +16,64 @@ class FBAuth extends React.Component {
       accessToken: PropTypes.string,
       expiresIn: PropTypes.string,
     }).isRequired,
+    accounts: PropTypes.arrayOf(PropTypes.shape({
+      access_token: PropTypes.string,
+      name: PropTypes.string,
+      id: PropTypes.string,
+    })),
+    page: PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string,
+      accessToken: PropTypes.string,
+    })
   }
 
   static defaultProps = {
     fbAuth: {
       accessToken: '',
       expiresIn: '',
-    }
+    },
+    accounts: [],
   }
 
   constructor(props) {
     super(props);
 
-    this.state = { isTokenVisible: false };
+    this.state = {
+      isTokenVisible: false,
+      currentPage: {},
+    };
   }
 
   toggleVisible() {
     this.setState({ isTokenVisible: !this.state.isTokenVisible });
+  }
+
+  async setPage(account = {}) {
+    const result = await fetch('/graphql', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+      },
+      body: JSON.stringify({
+        query: `
+          mutation ($id:String!, $accessToken:String!, $name:String!) {
+            setPage(id: $id, accessToken: $accessToken, name: $name)
+          }
+        `,
+        variables: {
+          id: account.id,
+          accessToken: account.access_token,
+          name: account.name
+        }
+      })
+    });
+
+    this.setState({
+      currentPage: account,
+    })
   }
 
   componentDidMount() {
@@ -68,6 +107,20 @@ class FBAuth extends React.Component {
                     取得授權
                   </a>
                 </div>
+              </div>
+            </div>
+            <h4>設定專頁</h4>
+            <div className="box">
+              <div className="box-body">
+                {this.props.accounts.map((account, index) => {
+                  return <button key={index}
+                                 className="btn btn-block btn-default"
+                                 disabled={account.name == this.state.currentPage.name}
+                                 onClick={this.setPage.bind(this, account)}>
+                           {(account.name == this.state.currentPage.name) ? <i className="fa fa-fw fa-check-circle text-success"></i> : null}
+                           {account.name}
+                         </button>
+                })}
               </div>
             </div>
           </div>

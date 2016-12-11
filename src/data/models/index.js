@@ -14,6 +14,7 @@ import UserClaim from './UserClaim';
 import UserProfile from './UserProfile';
 import FBAuth from './FBAuth';
 import Admin from './Admin';
+import Page from './Page';
 
 User.hasMany(UserLogin, {
   foreignKey: 'userId',
@@ -41,4 +42,4 @@ function sync(...args) {
 }
 
 export default { sync };
-export { User, UserLogin, UserClaim, UserProfile, FBAuth, Admin };
+export { User, UserLogin, UserClaim, UserProfile, FBAuth, Admin, Page };
