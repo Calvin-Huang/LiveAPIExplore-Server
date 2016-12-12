@@ -3,7 +3,6 @@
 module.exports = {
   up: function (queryInterface, Sequelize) {
     return queryInterface.createTable('UserProfile', {
-
       userId: {
         type: Sequelize.UUID,
         primaryKey: true,
@@ -28,7 +27,14 @@ module.exports = {
       website: {
         type: Sequelize.STRING(255),
       },
-
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      }
     });
   },
 
