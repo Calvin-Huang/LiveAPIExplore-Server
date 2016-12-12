@@ -46,22 +46,26 @@ const RegisterOrLogin = {
       id: id,
       email: email,
       emailConfirmed: true,
-      claim: [
-        {
-          type: claimType,
-          value: claim.accessToken
-        }
-      ],
-      profile: {
-        displayName: profile.displayName,
-        gender: profile.gender,
-        picture: `https://graph.facebook.com/${id}/picture?type=large`,
+    });
+
+    await UserClaim.findOrCreate({
+      where: {
+        userId: id,
+        type: claimType,
+        value: claim.accessToken
       },
-    }, {
-      include: [
-        { model: UserClaim, as: 'claims' },
-        { model: UserProfile, as: 'profile' },
-      ]
+      defaults: {
+        userId: id,
+        type: claimType,
+        value: claim.accessToken
+      }
+    });
+
+    await UserProfile.upsert({
+      userId: id,
+      displayName: profile.displayName,
+      gender: profile.gender,
+      picture: `https://graph.facebook.com/${id}/picture?type=large`,
     });
 
     const user = await User.findByPrimary(id, {
