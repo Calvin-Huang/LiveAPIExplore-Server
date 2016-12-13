@@ -7,7 +7,9 @@ const live = {
   type: new GraphQLList(GraphQLString),
   resolve(fieldName, args, context, { rootValue: { request } }) {
     return new Promise((resolve, reject) => {
-      createClient(redisUrl).lrange('live', 0, -1, (err, reply) => {
+      const redis = createClient(redisUrl);
+      
+      redis.lrange('live', 0, -1, (err, reply) => {
         if (!err) {
           resolve(reply);
         } else {
