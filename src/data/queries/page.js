@@ -6,7 +6,7 @@ import { Page as PageModel } from '../models';
 const Page = {
   type: PageType,
   async resolve(fieldName, args, context, { rootValue: { request } }) {
-    if (!request.user || !request.user.admin) {
+    if (!request.user) {
       return null;
     }
 
