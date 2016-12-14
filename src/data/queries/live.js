@@ -13,7 +13,7 @@ const live = {
       
       redis.lrange('live', 0, -1, (err, reply) => {
         if (!err) {
-          resolve(reply.map((live) => { return { id: live }; }));
+          resolve(reply.map((live) => { return { videoId: live }; }));
         } else {
           reject(err);
         }
