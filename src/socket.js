@@ -23,6 +23,12 @@ io.of('/live-chatroom')
 
       redis.subscribe(`${currentRoom}:latest`);
 
+      io.of('/live-chatroom').in(currentRoom).clients((err, clients) => {
+        if (clients.length === 1) {
+          redis.lpush('live', id);
+        }
+      });
+
       socket.emit('subscribed');
     });
 
