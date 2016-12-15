@@ -23,7 +23,7 @@ io.of('/live-chatroom')
 
       io.of('/live-chatroom').in(currentRoom).clients((err, clients) => {
         if (clients.length === 1) {
-          redis.subscribe(currentRoom);
+          redis.subscribe(`${currentRoom}:latest`);
         }
       });
 
@@ -44,7 +44,7 @@ io.of('/live-chatroom')
       io.of('/live-chatroom').in(currentRoom).clients((err, clients) => {
         if (clients.length === 0) {
           const redis = createClient(redisUrl);
-          redis.unsubscribe(currentRoom);
+          redis.unsubscribe(`${currentRoom}:latest`);
           redis.quit();
         }
       });
