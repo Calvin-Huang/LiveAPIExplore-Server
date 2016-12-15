@@ -131,7 +131,7 @@ app.post('/fb-subscribe',
     }
   },
   (req, res) => {
-    const { entry, object } = req;
+    const { entry, object } = req.body;
 
     if (object === 'page') {
       entry.forEach((eachEntry) => {
