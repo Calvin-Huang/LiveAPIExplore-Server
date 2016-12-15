@@ -21,34 +21,22 @@ io.of('/live-chatroom')
       currentRoom = `live:${id}:comments`;
       socket.join(currentRoom);
 
-      io.of('/live-chatroom').in(currentRoom).clients((err, clients) => {
-        if (clients.length === 1) {
-          redis.subscribe(`${currentRoom}:latest`);
-        }
-      });
+      redis.subscribe(`${currentRoom}:latest`);
 
       socket.emit('subscribed');
     });
 
     redis.on('message', (channel, message) => {
-      io.of('/live-chatroom').in(channel.replace(':latest', '')).emit('comment', message);
+      socket.emit('comment', message);
     });
 
     socket.on('unsubscribe', (id) => {
       socket.leave(id);
-
       socket.emit('unsubscribed');
     });
 
     socket.on('disconnect', () => {
-      io.of('/live-chatroom').in(currentRoom).clients((err, clients) => {
-        if (clients.length === 0) {
-          const redis = createClient(redisUrl);
-          redis.unsubscribe(`${currentRoom}:latest`);
-          redis.quit();
-        }
-      });
-
+      redis.unsubscribe(`${currentRoom}:latest`);
       redis.quit();
     })
   });
