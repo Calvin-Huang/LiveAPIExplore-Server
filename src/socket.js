@@ -28,8 +28,9 @@ io.of('/live-chatroom')
         if (result < 2) {
           redis.lpush('live', id);
         }
+
+        redis.quit();
       });
-      redis.quit();
 
       socket.emit('subscribed');
     });
