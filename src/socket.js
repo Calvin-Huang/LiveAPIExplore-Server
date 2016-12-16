@@ -23,8 +23,8 @@ io.of('/live-chatroom')
 
       redis.subscribe(`${currentRoom}:latest`);
 
-      io.of('/live-chatroom').in(currentRoom).clients((err, clients) => {
-        if (clients.length === 1) {
+      redis.exists('live', id, (err, result) => {
+        if (result < 2) {
           redis.lpush('live', id);
         }
       });
