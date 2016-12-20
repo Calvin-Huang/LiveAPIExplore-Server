@@ -70,7 +70,7 @@ const RegisterOrLogin = {
 
     const user = await User.findByPrimary(id, {
       include: [
-        { model: UserClaim, as: 'claims' },
+        { model: UserClaim, as: 'claims', order: [['id', 'DESC']], limit: 1 },
         { model: UserProfile, as: 'profile' },
       ]
     });
