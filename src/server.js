@@ -100,7 +100,6 @@ app.use(
 );
 app.use(passport.initialize());
 
-app.enable("trust proxy");
 app.get('/auth/facebook',
   passport.authenticate('facebook', { scope: ['email', 'manage_pages', 'publish_pages'], session: false }),
 );
