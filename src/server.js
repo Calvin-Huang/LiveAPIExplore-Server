@@ -102,7 +102,7 @@ app.use(passport.initialize());
 
 app.enable("trust proxy");
 app.get('/auth/facebook',
-  passport.authenticate('facebook', { scope: ['email', ], session: false }),
+  passport.authenticate('facebook', { scope: ['email', 'manage_pages', 'publish_pages'], session: false }),
 );
 app.get('/auth/facebook/callback',
   passport.authenticate('facebook', { failureRedirect: '/?failed=true', session: false }),
@@ -110,7 +110,7 @@ app.get('/auth/facebook/callback',
     const expiresIn = 60 * 60 * 24 * 180; // 180 days
     const token = jwt.sign(req.user, auth.jwt.secret, { expiresIn });
     res.cookie('id_token', token, { maxAge: 1000 * expiresIn, httpOnly: true });
-    res.redirect('/');
+    res.redirect('/login');
   },
 );
 // Verify with FB console.
