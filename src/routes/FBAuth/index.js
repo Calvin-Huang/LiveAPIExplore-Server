@@ -73,11 +73,34 @@ class FBAuth extends React.Component {
 
     this.setState({
       currentPage: account,
-    })
+    });
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.props.fetchFBAuth();
+
+    const response = await fetch('/graphql', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+      },
+      body: JSON.stringify({
+        query: `
+          {
+            page {
+              id, name, accessToken
+            }
+          }
+        `,
+      })
+    });
+
+    const { data } = await response.json();
+    this.setState({
+      currentPage: data.page,
+    });
   }
 
   render() {
