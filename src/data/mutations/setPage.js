@@ -38,7 +38,7 @@ const setPage = {
 
     const page = await Page.create({
       id: id,
-      accessToken: result.access_token,
+      accessToken: result[0].access_token,
       name: name,
     });
 
