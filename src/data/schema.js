@@ -27,6 +27,8 @@ import registerOrLogin from './mutations/registerOrLogin';
 import startLive from './mutations/startLive';
 import stopLive from './mutations/stopLive';
 import setPage from './mutations/setPage';
+import products from './mutations/products';
+import addProduct from './mutations/addProduct';
 
 const schema = new Schema({
   query: new ObjectType({
@@ -51,6 +53,8 @@ const schema = new Schema({
       startLive,
       stopLive,
       setPage,
+      products,
+      addProduct,
     }
   })
 });

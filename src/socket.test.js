@@ -7,6 +7,12 @@ import { redisUrl } from './config';
 
 describe('socket', () => {
   const commentMessage = 'Received comment!!';
+  const product = {
+    videoId: 1,
+    imageUrls: ['http://foo.boo/'],
+    name: 'Test Product',
+    price: 100,
+  };
 
   const redis = createClient(redisUrl);
 
@@ -103,6 +109,99 @@ describe('socket', () => {
             // Publish comment.
             redis.rpush('live:1:comments', commentMessage);
             redis.publish('live:1:comments:latest', commentMessage);
+          }
+        });
+
+        if (finishedCount == 4) {
+          client.emit('subscribe', '2');
+        } else {
+          client.emit('subscribe', '1');
+        }
+      });
+    }
+  });
+
+  it('should receive product from subscribed live room', (done) => {
+    const client = io.connect('http://localhost:5000/live-chatroom');
+
+    client.on('connect', () => {
+      client.on('product', (message) => {
+        expect(JSON.stringify(message)).to.be.eq(JSON.stringify(product));
+
+        client.disconnect();
+        done();
+      });
+
+      client.on('subscribed', () => {
+
+        // Publish product.
+        redis.publish('live:1:products:latest', JSON.stringify(product));
+      });
+
+      client.emit('subscribe', '1');
+    });
+  });
+
+  it('multi client should receive product from subscribed live room', (done) => {
+    let finishedCount = 0;
+    for (let i = 0; i < 4; i++) {
+      const client = io.connect('http://localhost:5000/live-chatroom');
+
+      client.on('connect', () => {
+        client.on('product', (message) => {
+          expect(JSON.stringify(message)).to.be.eq(JSON.stringify(product));
+
+          finishedCount += 1;
+
+          client.disconnect();
+           if (finishedCount == 4) {
+             done();
+           }
+        });
+
+        client.on('subscribed', () => {
+          finishedCount += 1;
+
+          // Wait all clients subscribed.
+          if (finishedCount == 4) {
+            finishedCount = 0;
+
+            // Publish product.
+            redis.publish('live:1:products:latest', JSON.stringify(product));
+          }
+        });
+
+        client.emit('subscribe', '1');
+      });
+    }
+  });
+
+  it('client should receive product from their subscribed live room', (done) => {
+    let finishedCount = 0;
+    for (let i = 0; i < 4; i++) {
+      const client = io.connect('http://localhost:5000/live-chatroom');
+
+      client.on('connect', () => {
+        client.on('product', (message) => {
+          expect(JSON.stringify(message)).to.be.eq(JSON.stringify(product));
+
+          finishedCount += 1;
+
+          client.disconnect();
+          if (finishedCount == 3) {
+            done();
+          }
+        });
+
+        client.on('subscribed', () => {
+          finishedCount += 1;
+
+          // Wait all clients subscribed.
+          if (finishedCount == 4) {
+            finishedCount = 0;
+
+            // Publish product.
+            redis.publish('live:1:products:latest', JSON.stringify(product));
           }
         });
 

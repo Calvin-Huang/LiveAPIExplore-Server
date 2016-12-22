@@ -48,6 +48,6 @@ const setPage = {
       return false;
     }
   },
-}
+};
 
 export default setPage;
