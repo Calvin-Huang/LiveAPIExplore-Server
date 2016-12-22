@@ -14,14 +14,16 @@ io.of('/live-chatroom')
     return next();
   })
   .on('connection', (socket) => {
-    const redisSubscriber = createClient(redisUrl);
+    const redisCommentSubscriber = createClient(redisUrl);
+    const redisProductSubscriber = createClient(redisUrl);
     let currentRoom = '';
 
     socket.on('subscribe', (id) => {
-      currentRoom = `live:${id}:comments`;
+      currentRoom = `live:${id}`;
       socket.join(currentRoom);
 
-      redisSubscriber.subscribe(`${currentRoom}:latest`);
+      redisCommentSubscriber.subscribe(`${currentRoom}:comments:latest`);
+      redisProductSubscriber.subscribe(`${currentRoom}:products:latest`);
 
       const redis = createClient(redisUrl);
       redis.exists('live', id, (err, result) => {
@@ -35,9 +37,13 @@ io.of('/live-chatroom')
       socket.emit('subscribed');
     });
 
-    redisSubscriber.on('message', (channel, message) => {
+    redisCommentSubscriber.on('message', (channel, message) => {
       socket.emit('comment', message);
     });
+
+    redisProductSubscriber.on('message', (channel, message) => {
+      socket.emit('product', JSON.parse(message));
+    })
 
     socket.on('unsubscribe', (id) => {
       socket.leave(id);
@@ -45,8 +51,11 @@ io.of('/live-chatroom')
     });
 
     socket.on('disconnect', () => {
-      redisSubscriber.unsubscribe(`${currentRoom}:latest`);
-      redisSubscriber.quit();
+      redisCommentSubscriber.unsubscribe(`${currentRoom}:comments:latest`);
+      redisCommentSubscriber.quit();
+
+      redisProductSubscriber.unsubscrive(`${currentRoom}:products:latest`);
+      redisProductSubscriber.quit();
     })
   });
 
