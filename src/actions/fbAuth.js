@@ -23,10 +23,17 @@ export function fetchFBAuth() {
           const { data } = await resp.json();
           if (!data || !data.fbAuth) throw new Error('Failed to fetch auth.');
 
+          const graphApiResp = await fetch(`https://graph.facebook.com/v2.8/me/accounts?access_token=${data.fbAuth.accessToken}`, {
+            method: 'GET',
+          });
+
+          const accounts = (await graphApiResp.json()).data;
+
           return dispatch({
             type: FETCH_FB_AUTH.SUCCESS,
             payload: {
               fbAuth: data.fbAuth,
+              accounts: accounts,
             }
           })
         } catch(e) {

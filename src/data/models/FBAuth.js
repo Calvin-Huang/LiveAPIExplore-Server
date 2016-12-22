@@ -3,6 +3,10 @@ import Model from '../sequelize'
 import moment from 'moment';
 
 const FBAuth = Model.define('FBAuth', {
+  id: {
+    type: DataType.INTEGER,
+    primaryKey: true,
+  },
   accessToken: DataType.STRING,
   expiresIn: {
     type: DataType.DATE,

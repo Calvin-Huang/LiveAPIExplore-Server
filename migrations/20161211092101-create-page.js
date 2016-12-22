@@ -1,18 +1,17 @@
 'use strict';
 module.exports = {
   up: function(queryInterface, Sequelize) {
-    return queryInterface.createTable('FBAuth', {
+    return queryInterface.createTable('Page', {
       id: {
         allowNull: false,
-        autoIncrement: true,
+        type: Sequelize.STRING,
         primaryKey: true,
-        type: Sequelize.INTEGER
       },
       accessToken: {
         type: Sequelize.STRING
       },
-      expiresIn: {
-        type: Sequelize.DATE
+      name: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -25,6 +24,6 @@ module.exports = {
     });
   },
   down: function(queryInterface, Sequelize) {
-    return queryInterface.dropTable('FBAuth');
+    return queryInterface.dropTable('Pages');
   }
 };

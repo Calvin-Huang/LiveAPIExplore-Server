@@ -1,15 +1,19 @@
-import { GraphQLList, GraphQLString } from 'graphql';
+import { GraphQLList } from 'graphql';
 import { createClient } from 'redis';
+
+import LiveType from '../types/LiveType';
 
 import { redisUrl } from '../../config';
 
 const live = {
-  type: new GraphQLList(GraphQLString),
+  type: new GraphQLList(LiveType),
   resolve(fieldName, args, context, { rootValue: { request } }) {
     return new Promise((resolve, reject) => {
-      createClient(redisUrl).lrange('live', 0, -1, (err, reply) => {
+      const redis = createClient(redisUrl);
+      
+      redis.lrange('live', 0, -1, (err, reply) => {
         if (!err) {
-          resolve(reply);
+          resolve(reply.map((live) => { return { videoId: live }; }));
         } else {
           reject(err);
         }

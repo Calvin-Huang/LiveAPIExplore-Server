@@ -78,7 +78,7 @@ app.use(
     },
   }),
   (req, res, next) => {
-    const allowedPaths = ['/login', '/graphql', '/auth/facebook', '/auth/facebook/callback'];
+    const allowedPaths = ['/login', '/graphql', '/auth/facebook', '/auth/facebook/callback', '/fb-subscribe'];
 
     if (allowedPaths.indexOf(req.path) > -1) {
       return next();
@@ -101,7 +101,7 @@ app.use(
 app.use(passport.initialize());
 
 app.get('/auth/facebook',
-  passport.authenticate('facebook', { scope: ['email', ], session: false }),
+  passport.authenticate('facebook', { scope: ['email', 'manage_pages', 'publish_pages'], session: false }),
 );
 app.get('/auth/facebook/callback',
   passport.authenticate('facebook', { failureRedirect: '/?failed=true', session: false }),
@@ -109,7 +109,7 @@ app.get('/auth/facebook/callback',
     const expiresIn = 60 * 60 * 24 * 180; // 180 days
     const token = jwt.sign(req.user, auth.jwt.secret, { expiresIn });
     res.cookie('id_token', token, { maxAge: 1000 * expiresIn, httpOnly: true });
-    res.redirect('/');
+    res.redirect('/login');
   },
 );
 // Verify with FB console.
@@ -131,7 +131,7 @@ app.post('/fb-subscribe',
     }
   },
   (req, res) => {
-    const { entry, object } = req;
+    const { entry, object } = req.body;
 
     if (object === 'page') {
       entry.forEach((eachEntry) => {

@@ -40,3 +40,6 @@ jspm_packages
 .idea
 
 *.sqlite
+
+# Ingore yarn.lock becuase heroku will break.
+yarn.lock

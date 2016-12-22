@@ -25,7 +25,8 @@
     "jquery": "^3.1.1",
     "jsonwebtoken": "7.1.9",
     "markdown-it": "8.1.0",
-    "moment": "^2.17.0",
+    "moment": "^2.17.1",
+    "mysql": "^2.12.0",
     "node-fetch": "1.6.3",
     "normalize.css": "5.0.0",
     "passport": "0.3.2",
@@ -117,29 +118,6 @@
     "webpack-hot-middleware": "^2.13.2",
     "webpack-middleware": "^1.5.1"
   },
-  "babel": {
-    "presets": [
-      "react",
-      "stage-0"
-    ],
-    "plugins": [
-      "syntax-trailing-function-commas",
-      "transform-async-to-generator",
-      "transform-es2015-destructuring",
-      "transform-es2015-parameters",
-      "transform-es2015-duplicate-keys",
-      "transform-es2015-modules-commonjs",
-      "transform-exponentiation-operator",
-      "transform-runtime"
-    ],
-    "env": {
-      "test": {
-        "plugins": [
-          "rewire"
-        ]
-      }
-    }
-  },
   "eslintConfig": {
     "parser": "babel-eslint",
     "extends": "airbnb",
@@ -184,7 +162,7 @@
     }
   },
   "scripts": {
-    "heroku-prebuild": "npm install && npm install -g babel-cli && npm install sequelize-cli -g && touch database.sqlite && sequelize db:migrate && SEED_ADMIN_USERNAME=$SEED_ADMIN_USERNAME SEED_ADMIN_PASSWORD=$SEED_ADMIN_PASSWORD sequelize db:seed --seed 20161204173948-default-admin && npm run deploy",
+    "heroku-prebuild": "npm install && npm install -g babel-cli && npm install sequelize-cli -g && sequelize db:migrate --url $DATABASE_URL && SEED_ADMIN_USERNAME=$SEED_ADMIN_USERNAME SEED_ADMIN_PASSWORD=$SEED_ADMIN_PASSWORD sequelize db:seed --seed 20161204173948-default-admin --url $DATABASE_URL  && npm run build",
     "lint:js": "eslint src tools",
     "lint:css": "stylelint \"src/**/*.{css,less,scss,sss}\"",
     "lint": "npm run lint:js && npm run lint:css",
