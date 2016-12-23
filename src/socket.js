@@ -54,7 +54,7 @@ io.of('/live-chatroom')
       redisCommentSubscriber.unsubscribe(`${currentRoom}:comments:latest`);
       redisCommentSubscriber.quit();
 
-      redisProductSubscriber.unsubscrive(`${currentRoom}:products:latest`);
+      redisProductSubscriber.unsubscribe(`${currentRoom}:products:latest`);
       redisProductSubscriber.quit();
     })
   });
