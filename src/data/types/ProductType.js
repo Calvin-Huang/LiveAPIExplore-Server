@@ -4,7 +4,7 @@ const ProductType = new GraphQLObjectType({
   name: 'Product',
   fields: {
     videoId: { type: GraphQLString },
-    images: { type: new GraphQLList(GraphQLString) },
+    imageUrls: { type: new GraphQLList(GraphQLString) },
     name: { type: GraphQLString },
     price: { type: GraphQLInt },
     shippingDays: { type: GraphQLInt },
