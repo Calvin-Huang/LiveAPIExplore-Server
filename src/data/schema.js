@@ -29,6 +29,7 @@ import stopLive from './mutations/stopLive';
 import setPage from './mutations/setPage';
 import products from './mutations/products';
 import addProduct from './mutations/addProduct';
+import comments from './mutations/comments';
 
 const schema = new Schema({
   query: new ObjectType({
@@ -55,6 +56,7 @@ const schema = new Schema({
       setPage,
       products,
       addProduct,
+      comments,
     }
   })
 });
