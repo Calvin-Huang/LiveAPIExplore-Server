@@ -25,8 +25,8 @@ const AddProduct = {
     if (product) {
       const redis = createClient(redisUrl);
 
-      redis.set(`live:${videoId}:products:latest`, JSON.stringify(args));
-      redis.publish(`live:${videoId}:products:latest`, JSON.stringify(args));
+      redis.set(`live:${args.videoId}:products:latest`, JSON.stringify(args));
+      redis.publish(`live:${args.videoId}:products:latest`, JSON.stringify(args));
 
       redis.quit();
 
