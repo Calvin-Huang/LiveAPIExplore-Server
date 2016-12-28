@@ -27,7 +27,8 @@ io.of('/live-chatroom')
 
       const redis = createClient(redisUrl);
       redis.exists('live', id, (err, result) => {
-        if (result < 2) {
+        console.log(result);
+        if (result == 0) {
           redis.lpush('live', id);
         }
 
