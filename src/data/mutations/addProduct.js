@@ -34,7 +34,7 @@ const AddProduct = {
       const page = await Page.findOne();
 
       if (page) {
-        fetch(`https://graph.facebook.com/v2.8/${page.id}_${videoId}/comments`, {
+        fetch(`https://graph.facebook.com/v2.8/${page.id}_${args.videoId}/comments`, {
           method: 'POST',
           headers: {
             Accept: 'application/json',
