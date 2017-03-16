@@ -11,7 +11,7 @@ const live = {
     return new Promise((resolve, reject) => {
       const redis = createClient(redisUrl);
       
-      redis.lrange('live', 0, -1, (err, reply) => {
+      redis.smembers('live', (err, reply) => {
         if (!err) {
           resolve(reply.map((live) => { return { videoId: live }; }));
         } else {

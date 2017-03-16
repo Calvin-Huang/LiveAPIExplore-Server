@@ -26,12 +26,7 @@ io.of('/live-chatroom')
       redisProductSubscriber.subscribe(`${currentRoom}:products:latest`);
 
       const redis = createClient(redisUrl);
-      redis.exists('live', id, (err, result) => {
-        console.log(result);
-        if (result == 0) {
-          redis.lpush('live', id);
-        }
-
+      redis.sadd('live', id, (err, result) => {
         redis.quit();
       });
 
