@@ -24,8 +24,6 @@ import login from './mutations/login';
 import addAdmin from './mutations/addAdmin';
 import deleteAdmin from './mutations/deleteAdmin';
 import registerOrLogin from './mutations/registerOrLogin';
-import startLive from './mutations/startLive';
-import stopLive from './mutations/stopLive';
 import setPage from './mutations/setPage';
 import products from './mutations/products';
 import addProduct from './mutations/addProduct';
@@ -51,8 +49,6 @@ const schema = new Schema({
       addAdmin,
       deleteAdmin,
       registerOrLogin,
-      startLive,
-      stopLive,
       setPage,
       products,
       addProduct,
