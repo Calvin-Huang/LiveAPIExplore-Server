@@ -9,7 +9,8 @@ const AddProduct = {
 	name: 'AddProduct',
   type: GraphQLBoolean,
 	args: {
-		videoId: { type: GraphQLString },
+    videoId: { type: GraphQLString },
+		liveId: { type: GraphQLString },
     imageUrls: { type: new GraphQLList(GraphQLString) },
     name: { type: GraphQLString },
     price: { type: GraphQLInt },
@@ -26,8 +27,8 @@ const AddProduct = {
     if (product) {
       const redis = createClient(redisUrl);
 
-      redis.set(`live:${args.videoId}:products:latest`, JSON.stringify(args));
-      redis.publish(`live:${args.videoId}:products:latest`, JSON.stringify(args));
+      redis.set(`live:${args.liveId}:products:latest`, JSON.stringify(args));
+      redis.publish(`live:${args.liveId}:products:latest`, JSON.stringify(args));
 
       redis.quit();
 
