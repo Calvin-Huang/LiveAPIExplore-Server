@@ -6,13 +6,13 @@ import { redisUrl } from '../../config';
 const Comments = {
 	type: new GraphQLList(GraphQLString),
   args: {
-    liveId: { type: GraphQLString },
+    videoId: { type: GraphQLString },
   },
-  async resolve(fieldName, { liveId }, context, { rootValue: { request } }) {
+  async resolve(fieldName, { videoId }, context, { rootValue: { request } }) {
     return new Promise((resolve, reject) => {
       const redis = createClient(redisUrl);
       
-      redis.lrange(`live:${liveId}:comments`, 0, -1, (err, reply) => {
+      redis.lrange(`live:${videoId}:comments`, 0, -1, (err, reply) => {
         if (!err) {
           resolve(reply);
         } else {

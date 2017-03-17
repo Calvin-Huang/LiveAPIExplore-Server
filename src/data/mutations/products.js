@@ -6,12 +6,12 @@ import { Product as ProductModel } from '../models';
 const Product = {
 	type: new GraphQLList(ProductType),
   args: {
-    liveId: { type: GraphQLString },
+    videoId: { type: GraphQLString },
   },
-  async resolve(fieldName, { liveId }, context, { rootValue: { request } }) {
+  async resolve(fieldName, { videoId }, context, { rootValue: { request } }) {
     const products = await ProductModel.findAll({
       where: {
-        liveId: liveId,
+        videoId: videoId,
       }
     });
 
