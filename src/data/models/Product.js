@@ -6,6 +6,7 @@ const Product = Model.define('Product', {
     type: DataType.INTEGER,
     primaryKey: true,
   },
+  liveId: DataType.STRING,
   videoId: DataType.STRING,
   imageUrls: { 
     type: DataType.STRING,
