@@ -19,7 +19,7 @@ io.of('/live-chatroom')
     let currentRoom = '';
 
     socket.on('subscribe', (live) => {
-      const { liveId, videoId } = live;
+      const { videoId } = live;
 
       currentRoom = `live:${videoId}`;
       socket.join(currentRoom);
@@ -44,7 +44,7 @@ io.of('/live-chatroom')
     })
 
     socket.on('unsubscribe', (live) => {
-      const { liveId, videoId } = live;
+      const { videoId } = live;
 
       socket.leave(videoId);
       socket.emit('unsubscribed');
