@@ -18,15 +18,17 @@ io.of('/live-chatroom')
     const redisProductSubscriber = createClient(redisUrl);
     let currentRoom = '';
 
-    socket.on('subscribe', (id) => {
-      currentRoom = `live:${id}`;
+    socket.on('subscribe', (live) => {
+      const { liveId, videoId } = live;
+
+      currentRoom = `live:${videoId}`;
       socket.join(currentRoom);
 
       redisCommentSubscriber.subscribe(`${currentRoom}:comments:latest`);
       redisProductSubscriber.subscribe(`${currentRoom}:products:latest`);
 
       const redis = createClient(redisUrl);
-      redis.sadd('live', id, (err, result) => {
+      redis.sadd('live', JSON.stringify(live), (err, result) => {
         redis.quit();
       });
 
@@ -41,8 +43,10 @@ io.of('/live-chatroom')
       socket.emit('product', JSON.parse(message));
     })
 
-    socket.on('unsubscribe', (id) => {
-      socket.leave(id);
+    socket.on('unsubscribe', (live) => {
+      const { liveId, videoId } = live;
+
+      socket.leave(videoId);
       socket.emit('unsubscribed');
     });
 

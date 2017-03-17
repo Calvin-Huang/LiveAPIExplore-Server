@@ -4,6 +4,7 @@ const LiveType = new GraphQLObjectType({
 	name: 'Live',
   fields: {
     videoId: { type: GraphQLString },
+    liveId: { type: GraphQLString },
   }
 });
 

@@ -13,7 +13,7 @@ const live = {
       
       redis.smembers('live', (err, reply) => {
         if (!err) {
-          resolve(reply.map((live) => { return { videoId: live }; }));
+          resolve(reply.map((liveJSONString) => { return JSON.parse(liveJSONString); }));
         } else {
           reject(err);
         }

@@ -42,6 +42,8 @@ import { port, auth, redisUrl } from './config';
 
 import io from './socket';
 
+import util from 'util';
+
 const app = express();
 
 //
@@ -138,6 +140,7 @@ app.post('/fb-subscribe',
         const { changes } = eachEntry;
 
         changes.forEach((change) => {
+          console.log(util.inspect(change));
           const { field, value: { sender_name, sender_id, item, post_id, verb, message } } = change;
 
           // Handle feed
