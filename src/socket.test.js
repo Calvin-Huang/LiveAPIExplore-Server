@@ -43,7 +43,7 @@ describe('socket', () => {
         redis.publish('live:1:comments:latest', commentMessage);
       });
 
-      client.emit('subscribe', '1');
+      client.emit('subscribe', { id: 'l1', videoId: '1' });
     });
   });
 
@@ -77,7 +77,7 @@ describe('socket', () => {
           }
         });
 
-        client.emit('subscribe', '1');
+        client.emit('subscribe', { id: 'l1', videoId: '1' });
       });
     }
   });
@@ -113,9 +113,9 @@ describe('socket', () => {
         });
 
         if (finishedCount == 4) {
-          client.emit('subscribe', '2');
+          client.emit('subscribe', { id: 'l2', videoId: '2' });
         } else {
-          client.emit('subscribe', '1');
+          client.emit('subscribe', { id: 'l1', videoId: '1' });
         }
       });
     }
@@ -138,7 +138,7 @@ describe('socket', () => {
         redis.publish('live:1:products:latest', JSON.stringify(product));
       });
 
-      client.emit('subscribe', '1');
+      client.emit('subscribe', { id: 'l1', videoId: '1' });
     });
   });
 
@@ -171,7 +171,7 @@ describe('socket', () => {
           }
         });
 
-        client.emit('subscribe', '1');
+        client.emit('subscribe', { id: 'l1', videoId: '1' });
       });
     }
   });
@@ -206,9 +206,9 @@ describe('socket', () => {
         });
 
         if (finishedCount == 4) {
-          client.emit('subscribe', '2');
+          client.emit('subscribe', { id: 'l2', videoId: '2' });
         } else {
-          client.emit('subscribe', '1');
+          client.emit('subscribe', { id: 'l1', videoId: '1' });
         }
       });
     }
